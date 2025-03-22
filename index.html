@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>You Have Won!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7f7f7; }
         h1 { font-size: 2.5em; color: #333; }
@@ -11,6 +12,15 @@
         .prize { font-size: 2em; color: #d32f2f; font-weight: bold; margin-top: 20px; opacity: 0; }
         .animate { animation: fadeIn 2s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake { animation: shake 0.5s; }
     </style>
 </head>
 <body>
@@ -27,11 +37,27 @@
             "A mystery box! 🎁"
         ];
 
+        function launchConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
         function revealPrize() {
+            let button = document.querySelector("button");
+            button.classList.add("shake");
+
+            setTimeout(() => {
+                button.classList.remove("shake");
+            }, 500);
+
             let prize = prizes[Math.floor(Math.random() * prizes.length)];
             let prizeText = document.getElementById('prizeText');
             prizeText.textContent = "🎉 You have won: " + prize + " 🎉";
             prizeText.classList.add("animate");
+            launchConfetti();
         }
     </script>
 </body>
