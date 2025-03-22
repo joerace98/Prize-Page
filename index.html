@@ -7,27 +7,31 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7f7f7; }
         h1 { font-size: 2.5em; color: #333; }
-        input, button { font-size: 1.2em; padding: 10px; margin: 10px; }
-        .hidden { display: none; }
-        .animate { animation: fadeIn 2s ease-in-out; }
+        button { font-size: 1.2em; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .prize { font-size: 2em; color: #d32f2f; font-weight: bold; margin-top: 20px; opacity: 0; }
+        .animate { animation: fadeIn 2s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
-    <h1>Enter Your Prize Below!</h1>
-    <input type="text" id="prizeInput" placeholder="Enter your prize...">
-    <button onclick="showPrize()">Reveal</button>
-    <h1 id="prizeText" class="hidden"></h1>
+    <h1>Click below to reveal your prize!</h1>
+    <button onclick="revealPrize()">Reveal Prize</button>
+    <h1 id="prizeText" class="prize"></h1>
 
     <script>
-        function showPrize() {
-            let prize = document.getElementById('prizeInput').value;
+        const prizes = [
+            "A brand new car! 🚗",
+            "A trip to Hawaii! 🌴",
+            "A $500 gift card! 💳",
+            "A gaming console! 🎮",
+            "A mystery box! 🎁"
+        ];
+
+        function revealPrize() {
+            let prize = prizes[Math.floor(Math.random() * prizes.length)];
             let prizeText = document.getElementById('prizeText');
-            if (prize) {
-                prizeText.textContent = "🎉 You have won: " + prize + " 🎉";
-                prizeText.classList.remove("hidden");
-                prizeText.classList.add("animate");
-            }
+            prizeText.textContent = "🎉 You have won: " + prize + " 🎉";
+            prizeText.classList.add("animate");
         }
     </script>
 </body>
