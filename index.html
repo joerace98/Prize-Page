@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Have Won!</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7f7f7; }
+        h1 { font-size: 2.5em; color: #333; }
+        input, button { font-size: 1.2em; padding: 10px; margin: 10px; }
+        .hidden { display: none; }
+        .animate { animation: fadeIn 2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1>Enter Your Prize Below!</h1>
+    <input type="text" id="prizeInput" placeholder="Enter your prize...">
+    <button onclick="showPrize()">Reveal</button>
+    <h1 id="prizeText" class="hidden"></h1>
+
+    <script>
+        function showPrize() {
+            let prize = document.getElementById('prizeInput').value;
+            let prizeText = document.getElementById('prizeText');
+            if (prize) {
+                prizeText.textContent = "🎉 You have won: " + prize + " 🎉";
+                prizeText.classList.remove("hidden");
+                prizeText.classList.add("animate");
+            }
+        }
+    </script>
+</body>
+</html>
