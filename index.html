@@ -30,11 +30,18 @@
 
     <script>
         const prizes = [
-            "My Love and Affection",
-            "A Diet Coke",
-            "Waterstones book",
-            "Back Massage",
-            "Legos!"
+            "Yoga Mat",
+            "Yoga Bolster",
+            "Goose and Gander Jumper",
+            "Living Proof Dry Shampoo",
+            "Charlotte Tilbury Bluring Powder",
+            "Sweaty Betty Pilates Socks",
+            "Conch Earing",
+            "Cowboy Boot Jumper",
+            "Weighted Ankle Weights",
+            "Needough Nice Cube",
+            "Book",
+            "Yoga Bag"
         ];
 
         function launchConfetti() {
@@ -48,6 +55,7 @@
         function revealPrize() {
             let button = document.querySelector("button");
             button.classList.add("shake");
+            button.disabled = true;
 
             setTimeout(() => {
                 button.classList.remove("shake");
