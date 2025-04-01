@@ -2,19 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin the Wheel!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spin to Win!</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background-color: #f7f7f7; }
-        h1 { font-size: 1.8em; color: #333; }
-        button { font-size: 1em; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        /* General Mobile-Friendly Styles */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 1.4em;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        button {
+            font-size: 1em;
+            padding: 12px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            border: none;
+            background: #ff5733;
+            color: white;
+            border-radius: 8px;
+            transition: 0.3s;
+            width: 90%;
+            max-width: 250px;
+        }
+
+        button:active {
+            background: #e04e2a;
+        }
 
         /* Wheel Container */
         .wheel-container {
             position: relative;
-            width: 250px;
-            height: 250px;
+            width: 90vw;
+            max-width: 250px;
+            height: 90vw;
+            max-height: 250px;
             margin: 20px auto;
         }
 
@@ -31,14 +62,14 @@
         /* Wheel Pointer */
         .pointer {
             position: absolute;
-            top: -15px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 25px solid red;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 20px solid red;
         }
 
         /* Prize Text */
@@ -50,8 +81,20 @@
             opacity: 0;
         }
         
-        .animate { animation: fadeIn 2s ease-in-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate {
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.2em; }
+            .prize { font-size: 1em; }
+        }
     </style>
 </head>
 <body>
@@ -107,8 +150,8 @@
                 ctx.rotate(i * sliceAngle + sliceAngle / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "#333";
-                ctx.font = "12px Arial";
-                ctx.fillText(prizes[i], radius - 10, 5);
+                ctx.font = "10px Arial";
+                ctx.fillText(prizes[i], radius - 15, 5);
                 ctx.restore();
             }
         }
@@ -135,7 +178,7 @@
 
             setTimeout(() => {
                 let prizeText = document.getElementById("prizeText");
-                prizeText.textContent = "🎉 You have won: " + prizes[prizeIndex] + " 🎉";
+                prizeText.textContent = "🎉 You won: " + prizes[prizeIndex] + " 🎉";
                 prizeText.classList.add("animate");
                 launchConfetti();
 
@@ -146,7 +189,7 @@
 
                 if (prizes.length === 0) {
                     button.disabled = true;
-                    prizeText.textContent = "🎉 All prizes have been won! 🎉";
+                    prizeText.textContent = "🎉 All prizes are won! 🎉";
                 } else {
                     drawWheel();
                 }
@@ -155,8 +198,8 @@
 
         function launchConfetti() {
             confetti({
-                particleCount: 100,
-                spread: 70,
+                particleCount: 80,
+                spread: 60,
                 origin: { y: 0.6 }
             });
         }
