@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin to Win!</title>
+    <title>Spin the Wheel!</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7f7f7; }
-        h1 { font-size: 2.5em; color: #333; }
-        button { font-size: 1.2em; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
-        
+        body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background-color: #f7f7f7; }
+        h1 { font-size: 1.8em; color: #333; }
+        button { font-size: 1em; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+
         /* Wheel Container */
         .wheel-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 250px;
+            height: 250px;
             margin: 20px auto;
         }
 
@@ -23,7 +23,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 10px solid #333;
+            border: 8px solid #333;
             position: absolute;
             transition: transform 4s ease-out;
         }
@@ -31,15 +31,27 @@
         /* Wheel Pointer */
         .pointer {
             position: absolute;
-            top: -20px;
+            top: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-bottom: 30px solid red;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid red;
         }
+
+        /* Prize Text */
+        .prize {
+            font-size: 1.2em;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 15px;
+            opacity: 0;
+        }
+        
+        .animate { animation: fadeIn 2s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -47,11 +59,11 @@
 
     <div class="wheel-container">
         <div class="pointer"></div>
-        <canvas id="wheelCanvas" width="300" height="300"></canvas>
+        <canvas id="wheelCanvas" width="250" height="250"></canvas>
     </div>
 
     <button id="spinButton" onclick="spinWheel()">Spin the Wheel</button>
-    <h1 id="prizeText" class="prize"></h1>
+    <h2 id="prizeText" class="prize"></h2>
 
     <script>
         let prizes = [
@@ -95,7 +107,7 @@
                 ctx.rotate(i * sliceAngle + sliceAngle / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "#333";
-                ctx.font = "14px Arial";
+                ctx.font = "12px Arial";
                 ctx.fillText(prizes[i], radius - 10, 5);
                 ctx.restore();
             }
@@ -104,6 +116,7 @@
         drawWheel();
 
         let spinning = false;
+        let currentRotation = 0;
 
         function spinWheel() {
             if (spinning || prizes.length === 0) return;
@@ -113,15 +126,17 @@
             button.disabled = true;
 
             let numPrizes = prizes.length;
-            let randomRotation = 360 * (3 + Math.random() * 2);
             let prizeIndex = Math.floor(Math.random() * numPrizes);
-            let finalAngle = randomRotation + (360 / numPrizes) * prizeIndex;
+            let sliceAngle = 360 / numPrizes;
+            let finalRotation = (360 * 5) + (sliceAngle * prizeIndex); // 5 full spins + random prize
 
-            canvas.style.transform = `rotate(${finalAngle}deg)`;
+            currentRotation += finalRotation; // Keep track of rotation
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
                 let prizeText = document.getElementById("prizeText");
                 prizeText.textContent = "🎉 You have won: " + prizes[prizeIndex] + " 🎉";
+                prizeText.classList.add("animate");
                 launchConfetti();
 
                 // Remove the won prize
