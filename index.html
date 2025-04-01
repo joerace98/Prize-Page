@@ -2,120 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spin to Win!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Have Won!</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        /* General Mobile-Friendly Styles */
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            background-color: #f7f7f7;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 1.4em;
-            color: #333;
-            margin: 10px 0;
-        }
-
-        button {
-            font-size: 1em;
-            padding: 12px 20px;
-            margin-top: 15px;
-            cursor: pointer;
-            border: none;
-            background: #ff5733;
-            color: white;
-            border-radius: 8px;
-            transition: 0.3s;
-            width: 90%;
-            max-width: 250px;
-        }
-
-        button:active {
-            background: #e04e2a;
-        }
-
-        /* Wheel Container */
-        .wheel-container {
-            position: relative;
-            width: 90vw;
-            max-width: 250px;
-            height: 90vw;
-            max-height: 250px;
-            margin: 20px auto;
-        }
-
-        /* The Wheel */
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 8px solid #333;
-            position: absolute;
-            transition: transform 4s ease-out;
-        }
-
-        /* Wheel Pointer */
-        .pointer {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 20px solid red;
-        }
-
-        /* Prize Text */
-        .prize {
-            font-size: 1.2em;
-            color: #d32f2f;
-            font-weight: bold;
-            margin-top: 15px;
-            opacity: 0;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7f7f7; }
+        h1 { font-size: 2.5em; color: #333; }
+        button { font-size: 1.2em; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .prize { font-size: 2em; color: #d32f2f; font-weight: bold; margin-top: 20px; opacity: 0; }
+        .animate { animation: fadeIn 2s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .animate {
-            animation: fadeIn 1.5s ease-in-out forwards;
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Responsive Fixes */
-        @media (max-width: 480px) {
-            h1 { font-size: 1.2em; }
-            .prize { font-size: 1em; }
-        }
+        .shake { animation: shake 0.5s; }
     </style>
 </head>
 <body>
-    <h1>Spin the Wheel to Win a Prize!</h1>
-
-    <div class="wheel-container">
-        <div class="pointer"></div>
-        <canvas id="wheelCanvas" width="250" height="250"></canvas>
-    </div>
-
-    <button id="spinButton" onclick="spinWheel()">Spin the Wheel</button>
-    <h2 id="prizeText" class="prize"></h2>
+    <h1>Click below to reveal your prize!</h1>
+    <button onclick="revealPrize()">Reveal Prize</button>
+    <h1 id="prizeText" class="prize"></h1>
 
     <script>
-        let prizes = [
+        const prizes = [
             "Yoga Mat",
             "Yoga Bolster",
             "Goose and Gander Jumper",
             "Living Proof Dry Shampoo",
-            "Charlotte Tilbury Blurring Powder",
-            "Conch Earring",
+            "Charlotte Tilbury Bluring Powder",
+            "Sweaty Betty Pilates Socks",
+            "Conch Earing",
             "Cowboy Boot Jumper",
             "Weighted Ankle Weights",
             "Needough Nice Cube",
@@ -123,85 +44,28 @@
             "Yoga Bag"
         ];
 
-        const canvas = document.getElementById("wheelCanvas");
-        const ctx = canvas.getContext("2d");
-        const colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", "#a0c4ff", "#bdb2ff", "#ffc6ff", "#f0a6ca", "#f8a8b4", "#ffcb77"];
-
-        function drawWheel() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const numPrizes = prizes.length;
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = canvas.width / 2;
-            const sliceAngle = (2 * Math.PI) / numPrizes;
-
-            for (let i = 0; i < numPrizes; i++) {
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
-                ctx.closePath();
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.fill();
-                ctx.stroke();
-
-                // Add text
-                ctx.save();
-                ctx.translate(centerX, centerY);
-                ctx.rotate(i * sliceAngle + sliceAngle / 2);
-                ctx.textAlign = "right";
-                ctx.fillStyle = "#333";
-                ctx.font = "10px Arial";
-                ctx.fillText(prizes[i], radius - 15, 5);
-                ctx.restore();
-            }
-        }
-
-        drawWheel();
-
-        let spinning = false;
-        let currentRotation = 0;
-
-        function spinWheel() {
-            if (spinning || prizes.length === 0) return;
-            spinning = true;
-
-            let button = document.getElementById("spinButton");
-            button.disabled = true;
-
-            let numPrizes = prizes.length;
-            let prizeIndex = Math.floor(Math.random() * numPrizes);
-            let sliceAngle = 360 / numPrizes;
-            let finalRotation = (360 * 5) + (sliceAngle * prizeIndex); // 5 full spins + random prize
-
-            currentRotation += finalRotation; // Keep track of rotation
-            canvas.style.transform = `rotate(${currentRotation}deg)`;
-
-            setTimeout(() => {
-                let prizeText = document.getElementById("prizeText");
-                prizeText.textContent = "🎉 You won: " + prizes[prizeIndex] + " 🎉";
-                prizeText.classList.add("animate");
-                launchConfetti();
-
-                // Remove the won prize
-                prizes.splice(prizeIndex, 1);
-                spinning = false;
-                button.disabled = false;
-
-                if (prizes.length === 0) {
-                    button.disabled = true;
-                    prizeText.textContent = "🎉 All prizes are won! 🎉";
-                } else {
-                    drawWheel();
-                }
-            }, 4000);
-        }
-
         function launchConfetti() {
             confetti({
-                particleCount: 80,
-                spread: 60,
+                particleCount: 100,
+                spread: 70,
                 origin: { y: 0.6 }
             });
+        }
+
+        function revealPrize() {
+            let button = document.querySelector("button");
+            button.classList.add("shake");
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.classList.remove("shake");
+            }, 500);
+
+            let prize = prizes[Math.floor(Math.random() * prizes.length)];
+            let prizeText = document.getElementById('prizeText');
+            prizeText.textContent = "🎉 You have won: " + prize + " 🎉";
+            prizeText.classList.add("animate");
+            launchConfetti();
         }
     </script>
 </body>
